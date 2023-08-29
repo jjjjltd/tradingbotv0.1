@@ -6,8 +6,8 @@ DEFAULT_LEVEL = logging.DEBUG
 
 class LogWrapper():
 
-    def __init__(self, name, mode="w", path=None):
-        self.path=path
+    def __init__(self, name, mode="w"):
+        self.path="./logs"
         self.create_directory()
         self.filename = self.path + "/" + name + ".log"
         self.logger = logging.getLogger(name)
