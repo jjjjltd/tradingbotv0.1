@@ -1,1 +1,1 @@
-Progress:  https://www.youtube.com/watch?v=eEpKWXpcEus&list=PLZ1QII7yudbecO6a-zAI6cuGP1LLnmW8e&index=74  05:00
+Progress: https://www.youtube.com/watch?v=6NflZ0lmNNI&list=PLZ1QII7yudbecO6a-zAI6cuGP1LLnmW8e&index=76 10:00

@@ -31,19 +31,20 @@ class TradingBot():
             if current > self.timings[pair].last_candle:
                 self.timings[pair].ready = True
                 self.timings[pair].last_candle = current
-                self.log(f"{pair} new candle {curent}")
+                self.log_message(f"{pair} new candle {current}")
 
     def process_pairs(self):
         for pair in self.trade_pairs:
             self.log_message(f" Ready to trade {pair}")
 
     def run(self):
-        print("update_timings()...")
-        self.update_timings()
-        print("update_pairs()...")
-        self.process_pairs()
-        print(f"sleep({SLEEP:.0f})...")
-        time.sleep(SLEEP)
+        while True:
+            print("update_timings()...")
+            self.update_timings()
+            print("update_pairs()...")
+            self.process_pairs()
+            print(f"sleep({SLEEP:.0f})...")
+            time.sleep(SLEEP)
 
 if __name__ == "__main__":
     b = TradingBot()
