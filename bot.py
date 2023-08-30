@@ -4,8 +4,10 @@ from settings import Settings
 from log_wrapper import LogWrapper
 from timing import Timing
 from oanda_api import OandaAPI
+import time
 
 GRANULARITY  = "M1"
+SLEEP = 10.0
 
 class TradingBot():
     def __init__(self):
@@ -22,5 +24,27 @@ class TradingBot():
     def log_message(self, msg):
         self.log.logger.debug(msg)
 
+    def update_timings(self):
+        for pair in self.trade_pairs:
+            current = self.api.last_complete_candle(pair, GRANULARITY)
+            self.timings[pair].ready = False
+            if current > self.timings[pair].last_candle:
+                self.timings[pair].ready = True
+                self.timings[pair].last_candle = current
+                self.log(f"{pair} new candle {curent}")
+
+    def process_pairs(self):
+        for pair in self.trade_pairs:
+            self.log_message(f" Ready to trade {pair}")
+
+    def run(self):
+        print("update_timings()...")
+        self.update_timings()
+        print("update_pairs()...")
+        self.process_pairs()
+        print(f"sleep({SLEEP:.0f})...")
+        time.sleep(SLEEP)
+
 if __name__ == "__main__":
-    tb = TradingBot()
+    b = TradingBot()
+    b.run()
