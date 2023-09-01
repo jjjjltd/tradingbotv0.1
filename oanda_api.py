@@ -5,6 +5,7 @@ import defs
 import utils
 import sys
 import json
+from oanad_trade import OandaTrade
 
 class OandaAPI():
 
@@ -108,6 +109,7 @@ class OandaAPI():
         if status_code != 201:
             return False
         return True
+    
     def place_trade(self, pair, units, take_profit=None, stop_loss=None):
         url = f"{defs.OANDA_URL}/accounts/{defs.ACCOUNT_ID}/orders"
 
@@ -140,6 +142,23 @@ class OandaAPI():
                     ok = False
                     return None
         return trade_id, ok
+    
+    
+    def open_trades(self):
+        url = f"{defs.OANDA_URL}/accounts/{defs.ACCOUNT_ID}/openTrades"
+        status_code, data = self.make_request(url)
+
+        if status_code != 200:
+            return [], False
+        
+        if 'trades' not in data:
+            return [], True
+        
+        trades = [OandaTrade.TradeFromAPI(x) for x in data['trades']]
+
+        return trades, True
+    
+
 
     @classmethod
     def candles_to_df(cls, json_data):
@@ -164,6 +183,6 @@ class OandaAPI():
 
 if __name__ == "__main__":
     api = OandaAPI()
-    res, df = api.fetch_candles("EUR_USD")
-    print(df)
-    print(api.last_complete_candle("EUR_USD"))
+    trades, ok = api.open_trades()
+    if ok == True:
+        [print(t) for t in trades]
