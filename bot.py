@@ -39,12 +39,13 @@ class TradingBot():
 
     def process_pairs(self):
         for pair in self.trade_pairs:
-            self.log_message(f" Ready to trade {pair}")
-        techs = Technicals(self.settings[pair], self.api, self.trade_pairs, GRANULARITY, log=self.tech_log)
-        decision = techs.get_trade_decision(self.timings[pair].last_candle)
-        units = decision * self.settings[pair].units
-        if units != 0:
-            self.log_message(f"We would trade {units} units")
+            if self.timings[pair].ready == True:
+                self.log_message(f" Ready to trade {pair}")
+                techs = Technicals(self.settings[pair], self.api, pair, GRANULARITY, log=self.tech_log)
+                decision = techs.get_trade_decision(self.timings[pair].last_candle)
+                units = decision * self.settings[pair].units
+                if units != 0:
+                    self.log_message(f"We would trade {units} units")
 
     def run(self):
         while True:
