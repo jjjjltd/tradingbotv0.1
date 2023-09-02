@@ -1,6 +1,6 @@
 class TradeManager():
 
-    def __init__(self, api, settings.log=None):
+    def __init__(self, api, settings, log=None):
         self.api = api
         self.log = log
         self.settings = settings
