@@ -29,13 +29,13 @@ class TradeManager():
             else:
                 self.log_message(f"TradeManager:close_trades() Closed")
 
-        def create_trades(self, trades_to_make):
-            for t in trades_to_make:
-                trade_id = self.api.place_trade(t['pair'], t['units'])
-                if trade_id is not None:
-                    self.log_message(f"TradeManager:Opened {trade_id} {t}")
-                else:
-                    self.log_message(f"TradeManager:FAILED TO OPEN {t}")
+    def create_trades(self, trades_to_make):
+        for t in trades_to_make:
+            trade_id = self.api.place_trade(t['pair'], t['units'])
+            if trade_id is not None:
+                self.log_message(f"TradeManager:Opened {trade_id} {t}")
+            else:
+                self.log_message(f"TradeManager:FAILED TO OPEN {t}")
 
 
 
@@ -43,4 +43,4 @@ class TradeManager():
         self.log_message(f"TradeManager: place_trades() {trades_to_make}")
         pairs = [x['pair'] for x in trades_to_make]
         self.close_trades(pairs)
-        self.create_trade(trades_to_make)
+        self.create_trades(trades_to_make)
