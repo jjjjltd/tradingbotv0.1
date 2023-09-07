@@ -5,7 +5,9 @@ import defs
 import utils
 import sys
 import json
+
 from oanad_trade import OandaTrade
+from oanda_price import OandaPrice
 
 class OandaAPI():
 
@@ -41,9 +43,15 @@ class OandaAPI():
             print("ERROR")
             return 400, None   
 
-    def fetch_instruments(self):
+    def fetch_instruments(self, pair_list=None):
         url = f"{defs.OANDA_URL}/accounts/{defs.ACCOUNT_ID}/instruments"
-        status_code, data = self.make_request(url)
+        params = None
+        if pair_list is not None:
+            params = dict(
+                instruments = ','.join(pair_list)
+            )
+
+        status_code, data = self.make_request(url, params=params)
         return status_code, data
     
     def get_instruments_df(self):
@@ -159,6 +167,21 @@ class OandaAPI():
         return trades, True
     
 
+    def fetch_prices(self, pair_list):
+        url = f"{defs.OANDA_URL}//accounts/{defs.ACCOUNT_ID}/pricing"
+
+        params = dict(
+            instruments = ','.join(pair_list)
+        )
+
+        status_code, data = self.make_request(url, params=params)
+
+        if status_code != 200:
+            return status_code, None
+        
+        prices = { x['instrument']: OandaPrice.PriceFromAPI(x) for x in data['prices'] }
+        return status_code, prices
+
 
     @classmethod
     def candles_to_df(cls, json_data):
@@ -183,6 +206,9 @@ class OandaAPI():
 
 if __name__ == "__main__":
     api = OandaAPI()
-    trades, ok = api.open_trades()
-    if ok == True:
-        [print(t) for t in trades]
+    # trades, ok = api.open_trades()
+    # if ok == True:
+    #     [print(t) for t in trades]
+
+    code, prices = api.fetch_prices(['EUR_USD', 'SGD_CHF'])
+    print(prices)
